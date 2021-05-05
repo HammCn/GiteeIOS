@@ -79,11 +79,16 @@ struct LoginView: View {
                             self.isLoading = false
                             self.isModal = false
                             let json = JSON(value)
-                            print(json["access_token"])
-                            
                             if let access_token = json["access_token"].string {
                                 localConfig.setValue(access_token, forKey: giteeConfig.access_token)
-                                self.presentation.wrappedValue.dismiss()
+                                
+                                UserModel().getMyInfo { (userInfo) in
+                                    localConfig.setValue(userInfo["login"].stringValue, forKey: giteeConfig.user_name)
+                                    self.presentation.wrappedValue.dismiss()
+                                } error: {
+                                    self.startAlert(title: "登录失败", message: "请确认账号密码是否正确")
+                                }
+                                
                             } else {
                                 self.startAlert(title: "登录失败", message: "请确认账号密码是否正确")
                             }
@@ -108,18 +113,7 @@ struct LoginView: View {
                 self.isEdit = false
                 UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
             })
-            .listStyle(GroupedListStyle())
-            .navigationBarTitle(Text("你的代码仓库"), displayMode: .inline)
-            .navigationBarItems(trailing:
-                                    HStack {
-                                        Button(action: {
-                                            print("Tap")
-                                        }) {
-                                            Image(systemName: "text.badge.checkmark")
-                                                
-                                                .scaleEffect(1.2, anchor: .center)
-                                        }
-                                    })
+//            .listStyle(GroupedListStyle())
             .preferredColorScheme(.dark)
         }
         .alert(isPresented: $alertShow) {

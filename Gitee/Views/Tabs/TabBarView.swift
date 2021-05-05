@@ -29,12 +29,12 @@ struct TabBarView: View {
                     Text("动态")
                 }
                     .tag(1)
-                ExploreView()
-                .tabItem {
-                    Image(systemName:"opticaldisc")
-                    Text("发现")
-                }
-                    .tag(2)
+//                ExploreView()
+//                .tabItem {
+//                    Image(systemName:"opticaldisc")
+//                    Text("发现")
+//                }
+//                    .tag(2)
                 SettingView()
                 .tabItem {
                     Image(systemName:"gearshape")
@@ -46,8 +46,6 @@ struct TabBarView: View {
             .navigationBarHidden(self.selectedBarIndex==3)
             .foregroundColor(.white)
             .accentColor(.white) //这里修改文字颜色
-        }
-        .onAppear(){
         }
         .accentColor(.white)
         .foregroundColor(.white)

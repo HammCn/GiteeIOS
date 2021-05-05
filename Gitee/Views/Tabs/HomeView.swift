@@ -73,7 +73,7 @@ struct HomeView: View {
             self.isLoaded = true
         }
         .onAppear(){
-//            localConfig.setValue("all", forKey: giteeConfig.access_token)
+//            localConfig.setValue("", forKey: giteeConfig.access_token)
             if(self.isLoaded){
                 UserModel().getMyInfo { (userInfo) in
                     

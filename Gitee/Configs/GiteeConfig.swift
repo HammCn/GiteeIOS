@@ -9,6 +9,7 @@ import Foundation
 
 struct giteeConfig {
     static let access_token = "access_token"
+    static let user_name = "user_name"
     
     static var issue_filter = "issue_filter"
     static var issue_state = "issue_state"

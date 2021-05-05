@@ -10,6 +10,6 @@ import SwiftUI
 struct UserProfileView: View {
     @State var userInfo: UserItemModel
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("别急,快了")
     }
 }

@@ -91,15 +91,15 @@ struct SettingView: View {
                 }
                 .padding(.vertical,10)
                 .padding(.horizontal,20)
-                VStack{
-                    NavigationLink(destination: SettingQrcode(userAccount: "hamm")) {
-                        SettingItemView(title: "修改资料",icon:"person.circle")
-                    }
-                }
-                .background(Color(red: 1, green: 1, blue: 1, opacity: 0.1))
-                .cornerRadius(10)
-                .padding(.horizontal,5)
-                .padding(.top,10)
+//                VStack{
+//                    NavigationLink(destination: SettingQrcode(userAccount: "hamm")) {
+//                        SettingItemView(title: "修改资料",icon:"person.circle")
+//                    }
+//                }
+//                .background(Color(red: 1, green: 1, blue: 1, opacity: 0.1))
+//                .cornerRadius(10)
+//                .padding(.horizontal,5)
+//                .padding(.top,10)
                 VStack{
                     NavigationLink(destination:  PubKeysView()) {
                         SettingItemView(title: "公钥管理",icon:"lock.circle")

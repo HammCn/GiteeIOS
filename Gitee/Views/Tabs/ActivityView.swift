@@ -46,24 +46,15 @@ struct ActivityView: View {
                 }
             }
             .sheet(isPresented: $isLoginShow,onDismiss: {
-                UserModel().getMyInfo { (userInfo) in
-                    self.isLoading = false
-                    self.getActivityList()
-                } error: {
-                    self.isLoginShow.toggle()
-                }
+                self.lastId = 0
+                self.getActivityList()
             }){
                 LoginView()
                     .modifier(DisableModalDismiss(disabled: true))
             }
             .onAppear(){
-                UserModel().getMyInfo { (userInfo) in
-                    self.myInfoString = userInfo
-                    self.lastId = 0
-                    self.getActivityList()
-                } error: {
-                    self.isLoginShow.toggle()
-                }
+                self.lastId = 0
+                self.getActivityList()
             }
         }
     }
@@ -73,8 +64,12 @@ struct ActivityView: View {
         if activityList.count == 0 {
             self.isLoading = true
         }
-        let MyInfo = JSON(myInfoString as Any)
-        let url = "users/" + MyInfo["login"].stringValue + "/received_events?limit=30&prev_id=" + String(lastId)
+        let user_name = localConfig.string(forKey: giteeConfig.user_name)
+        if user_name == nil {
+            self.isLoginShow = true
+            return
+        }
+        let url = "users/" + user_name! + "/received_events?limit=30&prev_id=" + String(lastId)
         HttpRequest(url: url, withAccessToken: true)
             .doGet { (value) in
                 let json = JSON(value)
