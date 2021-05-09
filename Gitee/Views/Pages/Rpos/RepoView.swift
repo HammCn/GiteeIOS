@@ -9,7 +9,11 @@ import SwiftUI
 import SwiftyJSON
 import SwipeCell
 
-
+enum ShowRepoListFrom {
+    case fromMine
+    case fromStars
+    case fromWatches
+}
 struct RepoView: View {
     @State var repoList: [RepoModel] = []
     @State var waitPlease = false
@@ -20,6 +24,9 @@ struct RepoView: View {
     @State var isFilterShow = false
     @State var isLoginShow = false
     @State var page = 1
+    @State var urlPath:String = ""
+    @State var naviTitle:String = "你的仓库"
+    @State var showListFrom:ShowRepoListFrom = ShowRepoListFrom.fromMine
     var body: some View {
         LoadingView(isLoading:self.$isLoading,message: self.$message,isModal:self.$isModal) {
             ZStack{
@@ -62,7 +69,7 @@ struct RepoView: View {
                 .modifier(DisableModalDismiss(disabled: true))
         }
         .padding(.top,5)
-        .navigationBarTitle(Text("代码仓库"), displayMode: .inline)
+        .navigationBarTitle(Text(naviTitle), displayMode: .inline)
         .navigationBarItems(
             trailing:
                 HStack {
@@ -79,17 +86,25 @@ struct RepoView: View {
                     self.page = 1
                     self.getRepoList(page: self.page)
                 }){
-                    RepoFilterView()
+                    RepoFilterView(showListFrom: self.showListFrom)
                         .modifier(DisableModalDismiss(disabled: false))
                 }
         )
         .onAppear(){
+            switch self.showListFrom {
+            case ShowRepoListFrom.fromWatches:
+                self.naviTitle = "Watch的仓库"
+            case ShowRepoListFrom.fromStars:
+                self.naviTitle = "Star的仓库"
+            default:
+                self.naviTitle = "你的仓库"
+            }
+            
             localConfig.setValue("all", forKey: giteeConfig.repo_type)
             localConfig.setValue("pushed", forKey: giteeConfig.repo_sort)
             localConfig.setValue("desc", forKey: giteeConfig.repo_direction)
             self.page = 1
             self.getRepoList( page: self.page)
-            print("activity onappear")
         }
     }
     func getRepoList(page: Int){
@@ -100,12 +115,30 @@ struct RepoView: View {
         }
         let type = localConfig.string(forKey: giteeConfig.repo_type)
         let direction = localConfig.string(forKey: giteeConfig.repo_direction)
-        let sort = localConfig.string(forKey: giteeConfig.repo_sort)
-        var url = "user/repos?page=" + String(page);
-        
-        url = url + "&type=" + type!
-        url = url + "&direction=" + direction!
-        url = url + "&sort=" + sort!
+        var sort = localConfig.string(forKey: giteeConfig.repo_sort)
+        var url = ""
+        print(showListFrom)
+        switch showListFrom {
+        case .fromStars:
+            if sort != "created"{
+                sort = "last_push"
+            }
+            url = "users/" + self.urlPath + "?page=" + String(page)
+            url = url + "&direction=" + direction!
+            url = url + "&sort=" + sort!
+        case .fromWatches:
+            if sort != "created"{
+                sort = "last_push"
+            }
+            url = "users/" + self.urlPath + "?page=" + String(page)
+            url = url + "&direction=" + direction!
+            url = url + "&sort=" + sort!
+        default:
+            url = "user/repos?page=" + String(page)
+            url = url + "&type=" + type!
+            url = url + "&direction=" + direction!
+            url = url + "&sort=" + sort!
+        }
         
         HttpRequest(url: url, withAccessToken: true)
             .doGet { (value) in

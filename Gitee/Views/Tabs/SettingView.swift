@@ -24,11 +24,15 @@ struct SettingView: View {
     
     @State var isActiveFollowing:Bool = false
     @State var isActiveFollowers:Bool = false
+    @State var isActiveStars:Bool = false
+    @State var isActiveWatches:Bool = false
     
     var body: some View {
         ScrollView{
             NavigationLink(destination: UserFollowersView(), isActive: $isActiveFollowers) { EmptyView() }
             NavigationLink(destination: UserFollowingView(), isActive: $isActiveFollowing) { EmptyView() }
+            NavigationLink(destination: RepoView(urlPath: self.userAccount + "/starred", showListFrom: ShowRepoListFrom.fromStars), isActive: $isActiveStars) { EmptyView() }
+            NavigationLink(destination: RepoView(urlPath: self.userAccount + "/subscriptions", showListFrom: ShowRepoListFrom.fromWatches), isActive: $isActiveWatches) { EmptyView() }
             NavigationLink(destination:
                             SettingQrcode(userAccount:  self.userAccount), isActive: $isQrcodeShow) { EmptyView() }
             VStack{
@@ -82,11 +86,17 @@ struct SettingView: View {
                             .fontWeight(.bold)
                         Text("Star").foregroundColor(Color(hex: 0x999999)).font(.system(size:12))
                     }
+                    .onTapGesture {
+                        self.isActiveStars = true
+                    }
                     Spacer()
                     VStack{
                         Text(self.userWatches).font(.system(size:20))
                             .fontWeight(.bold)
                         Text("Watch").foregroundColor(Color(hex: 0x999999)).font(.system(size:12))
+                    }
+                    .onTapGesture {
+                        self.isActiveWatches = true
                     }
                 }
                 .padding(.vertical,10)

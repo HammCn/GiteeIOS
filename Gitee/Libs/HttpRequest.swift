@@ -36,6 +36,7 @@ class HttpRequest {
         print(self.url)
     }
     public func doPost(postData:[String:String],successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
             if self.url.contains("?") {
                 self.url = self.url + "&access_token=" + self.access_token
@@ -59,10 +60,15 @@ class HttpRequest {
             }else{
                 errorCallback()
             }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
+            }
         }
         task.resume()
     }
     public func doGet(successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
             if self.url.contains("?") {
                 self.url = self.url + "&access_token=" + self.access_token
@@ -81,10 +87,15 @@ class HttpRequest {
             }else{
                 errorCallback()
             }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
+            }
         }
         task.resume()
     }
     public func doPut(postData:[String:String],successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
             if self.url.contains("?") {
                 self.url = self.url + "&access_token=" + self.access_token
@@ -108,10 +119,15 @@ class HttpRequest {
             }else{
                 errorCallback()
             }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
+            }
         }
         task.resume()
     }
     public func doDelete(postData:[String:String],successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
             if self.url.contains("?") {
                 self.url = self.url + "&access_token=" + self.access_token
@@ -135,10 +151,15 @@ class HttpRequest {
             }else{
                 errorCallback()
             }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
+            }
         }
         task.resume()
     }
     public func doPatch(postData:[String:String],successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
             if self.url.contains("?") {
                 self.url = self.url + "&access_token=" + self.access_token
@@ -161,6 +182,10 @@ class HttpRequest {
                 successCallback(data!)
             }else{
                 errorCallback()
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
             }
         }
         task.resume()

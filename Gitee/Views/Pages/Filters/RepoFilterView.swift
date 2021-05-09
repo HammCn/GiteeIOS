@@ -18,13 +18,17 @@ struct RepoFilterView: View {
     @State var direction = 0;
     @State var directionList = ["从最新开始","从最早开始"];
     @State var directionKey = ["desc","asc"];
+    @State var showListFrom:ShowRepoListFrom = ShowRepoListFrom.fromMine
+    
     var body: some View {
         NavigationView{
             Form{
-                Section(header: Text("条件")) {
-                    Picker(selection: self.$type, label: Text("仓库归属")) {
-                        ForEach(0 ..< self.typeList.count){
-                            Text(self.typeList[$0]).tag($0)
+                if self.showListFrom == ShowRepoListFrom.fromMine{
+                    Section(header: Text("条件")) {
+                        Picker(selection: self.$type, label: Text("仓库归属")) {
+                            ForEach(0 ..< self.typeList.count){
+                                Text(self.typeList[$0]).tag($0)
+                            }
                         }
                     }
                 }
@@ -41,7 +45,7 @@ struct RepoFilterView: View {
                     }
                 }
             }
-            .navigationBarTitle(Text("筛选你的仓库"), displayMode: .large)
+            .navigationBarTitle(Text("筛选仓库"), displayMode: .large)
             .navigationBarItems(trailing:
                                     Button(action: {
                                         // 存储这部分配置
