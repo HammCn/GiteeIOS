@@ -59,23 +59,31 @@ struct PublicKeyInsertView: View {
                             UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
                             self.isLoading = true
                             self.isModal = true
-                            print(["title":pubTitle,"key":pubKey])
-                            HttpRequest(url: "user/keys",withAccessToken: true)
-                                .doPost(postData: ["title":pubTitle,"key":pubKey]) { (result) in
-                                let json = JSON(result)
-                                self.isLoading = false
-                                self.isModal = false
-                                if json["message"].string != nil{
+                            let access_token = localConfig.string(forKey: giteeConfig.access_token)
+                            let json:JSON = [
+                                "access_token" : access_token!,
+                                "title" : pubTitle,
+                                "key" : pubKey
+                            ]
+                            if let postJson = json.rawString() {
+                                HttpRequest(url: "user/keys",withAccessToken: true)
+                                    .doPostJson(postJson: postJson) { (result) in
+                                    let json = JSON(result)
+                                        print(json)
                                     self.isLoading = false
                                     self.isModal = false
-                                    self.startAlert(title: "添加失败", message: json["message"].stringValue)
-                                }else{
-                                    self.mode.wrappedValue.dismiss()
+                                    if json["message"].string != nil{
+                                        self.isLoading = false
+                                        self.isModal = false
+                                        self.startAlert(title: "添加失败", message: json["message"].stringValue)
+                                    }else{
+                                        self.mode.wrappedValue.dismiss()
+                                    }
+                                } errorCallback: {
+                                    self.isLoading = false
+                                    self.isModal = false
+                                    self.startAlert(title: "添加失败", message: "网络发生了点错误,请稍候再试")
                                 }
-                            } errorCallback: {
-                                self.isLoading = false
-                                self.isModal = false
-                                self.startAlert(title: "添加失败", message: "网络发生了点错误,请稍候再试")
                             }
                         }) {
                             Text("提交").foregroundColor(.yellow)

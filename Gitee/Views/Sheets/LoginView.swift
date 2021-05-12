@@ -63,10 +63,10 @@ struct LoginView: View {
                 .padding(.bottom,30)
                 
                 Button(action: {
-                    UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
                     self.isEdit=false
                     self.isLoading = true
                     self.isModal = true
+                    UIApplication.shared.windows.first { $0.isKeyWindow }?.endEditing(true)
                     HttpRequest(url: "https://gitee.com/oauth/token")
                         .doPost(postData: [
                             "grant_type" : "password",

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import  SwiftyJSON
 
 struct HomeView: View {
     @State var isLoginShow = false
@@ -74,6 +75,7 @@ struct HomeView: View {
         }
         .onAppear(){
 //            localConfig.setValue("", forKey: giteeConfig.access_token)
+            
             if(self.isLoaded){
                 UserModel().getMyInfo { (userInfo) in
                     

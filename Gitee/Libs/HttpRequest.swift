@@ -67,6 +67,28 @@ class HttpRequest {
         }
         task.resume()
     }
+    public func doPostJson(postJson:String,successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
+        globalConfig.canOpenByMoveToRight = false
+        print(self.url)
+        var urlSession:URLSession = URLSession(configuration: .default)
+        var urlRequest:URLRequest = URLRequest(url: URL(string: self.url)!)
+        urlSession = URLSession(configuration: .default)
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = postJson.data(using: .utf8)
+        let task = urlSession.dataTask(with: urlRequest) {(data, response, error) in
+            if data != nil{
+                successCallback(data!)
+            }else{
+                errorCallback()
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2) {
+                globalConfig.canOpenByMoveToRight = true
+                print("允许左滑了")
+            }
+        }
+        task.resume()
+    }
     public func doGet(successCallback:@escaping((Data)->Void),errorCallback:@escaping(()->Void)){
         globalConfig.canOpenByMoveToRight = false
         if self.access_token != ""{
