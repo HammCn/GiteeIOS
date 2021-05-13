@@ -47,6 +47,7 @@ struct TabBarView: View {
             .foregroundColor(.white)
             .accentColor(.white) //这里修改文字颜色
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .accentColor(.white)
         .foregroundColor(.white)
         .preferredColorScheme(.dark)

@@ -81,17 +81,17 @@ extension UIAlertController {
         }
     }
 }
-extension UINavigationController: UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        print(NSDate().timeIntervalSince1970)
-        interactivePopGestureRecognizer?.delegate = self
-    }
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1 && globalConfig.canOpenByMoveToRight
-    }
-}
+//extension UINavigationController: UIGestureRecognizerDelegate {
+//    override open func viewDidLoad() {
+//        super.viewDidLoad()
+//        print(NSDate().timeIntervalSince1970)
+//        interactivePopGestureRecognizer?.delegate = self
+//    }
+//
+//    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        return viewControllers.count > 1 
+//    }
+//}
 extension UIApplication {
     func visibleViewController() -> UIViewController? {
         guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return nil }

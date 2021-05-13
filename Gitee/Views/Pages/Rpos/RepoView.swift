@@ -157,7 +157,6 @@ struct RepoView: View {
                     }
                     repoList = tempList
                 }
-                self.isRefreshing = false
                 self.isLoading = false
                 self.waitPlease = false
             } errorCallback: {

@@ -10,10 +10,10 @@ import SwiftUI
 struct RefreshView<Content: View>: View {
     @State private var previousScrollOffset: CGFloat = 0
     @State private var scrollOffset: CGFloat = 0
-    @State private var frozen: Bool = false
     @State private var rotation: Angle = .degrees(0)
+    @State private var pleaseCallback:Bool = false
     
-    var threshold: CGFloat = 80
+    var threshold: CGFloat = 50
     @Binding var refreshing: Bool
     let content: Content
     public typealias Action = ()->Void
@@ -31,19 +31,15 @@ struct RefreshView<Content: View>: View {
             ScrollView {
                 ZStack(alignment: .top) {
                     MovingView()
-                    
                     VStack {
                         self.content
                     }
-                    .alignmentGuide(.top, computeValue: { d in (self.refreshing && self.frozen) ? -self.threshold : 0.0 })
-                    // add an animation when a view is going up only
-                    .animation(.default, value: self.refreshing)
-                    
+                    .alignmentGuide(.top, computeValue: { d in 0})
+                    .animation(.default, value: false)
                     SymbolView(height: self.threshold,
                                refreshing: self.refreshing,
-                               frozen: self.frozen,
                                rotation: self.rotation,
-                               offset: self.scrollOffset)
+                               offset: self.scrollOffset, pleaseCallback: self.pleaseCallback)
                     
                 }
             }
@@ -56,44 +52,25 @@ struct RefreshView<Content: View>: View {
     
     func refreshLogic(values: [RefreshableKeyTypes.PrefData]) {
         DispatchQueue.main.async {
-            // Calculate scroll offset
             let movingBounds = values.first { $0.vType == .movingView }?.bounds ?? .zero
             let fixedBounds = values.first { $0.vType == .fixedView }?.bounds ?? .zero
             self.fixedMinY = fixedBounds.minY
-            
             self.scrollOffset  = movingBounds.minY - fixedBounds.minY
-            
             self.rotation = self.symbolRotation(self.scrollOffset)
-            
-            // Crossing the threshold on the way down, we start the refresh process
-            if !self.refreshing && (self.scrollOffset > self.threshold && self.previousScrollOffset <= self.threshold) {
-                self.refreshing = true
+            if self.scrollOffset > self.threshold {
+                self.pleaseCallback = true
+            }
+            if self.scrollOffset == 0 && self.pleaseCallback{
                 self.action?()
+                self.pleaseCallback = false
             }
-            
-            if self.refreshing {
-                // Crossing the threshold on the way up, we add a space at the top of the scrollview
-                if self.previousScrollOffset > self.threshold && self.scrollOffset <= self.threshold {
-                    self.frozen = true
-                }
-            } else {
-                // remove the sapce at the top of the scroll view
-                self.frozen = false
-            }
-            
-            // Update last scroll offset
-            self.previousScrollOffset = self.scrollOffset
         }
     }
     
     func symbolRotation(_ scrollOffset: CGFloat) -> Angle {
-        
-        // We will begin rotation, only after we have passed
-        // 60% of the way of reaching the threshold.
         if scrollOffset < self.threshold * 0.60 {
             return .degrees(0)
         } else {
-            // Calculate rotation, based on the amount of scroll offset
             let h = Double(self.threshold)
             let d = Double(scrollOffset)
             let v = max(min(d - (h * 0.6), h * 0.4), 0)
@@ -104,24 +81,20 @@ struct RefreshView<Content: View>: View {
     struct SymbolView: View {
         var height: CGFloat
         var refreshing: Bool
-        var frozen: Bool
         var rotation: Angle
         var offset: CGFloat
+        var pleaseCallback: Bool
         
         private func pullView() -> some View {
             return VStack {
                 Spacer()
                 HStack {
-//                    Text("下拉刷新") // localization
-//                        .foregroundColor(.secondary)
-//                        .padding(.trailing,-10)
-                    Image(systemName: "circle.grid.cross.left.fill") // If not loading, show the arrow
+                    Image(systemName: "circle.grid.cross.left.fill")
                         .resizable()
                         .foregroundColor(.secondary)
                         .aspectRatio(contentMode: .fit)
-//                        .frame(width: height * 0.4, height: height * 0.4).fixedSize()
-                        .scaleEffect(0.5, anchor: .center)
-                        .padding(height * 0.1)
+                        .frame(width: 20, height: 20).fixedSize()
+                        .padding(20)
                         .rotationEffect(rotation)
                 }
                 Spacer()
@@ -129,22 +102,20 @@ struct RefreshView<Content: View>: View {
             .frame(height: height)
             .fixedSize()
             .animation(.easeInOut(duration: 0.5))
-            .offset(y: -height + (refreshing && frozen ? +height : 0.0))
+            .offset(y: -height)
         }
         
         var body: some View {
             Group {
-                if self.refreshing { // If loading, show the activity control
+                if self.pleaseCallback {
                     VStack {
                         Spacer()
                         ActivityRep()
                         Spacer()
                     }
                     .frame(height: height).fixedSize()
-                    .offset(y: -height + (self.refreshing && self.frozen ? height : 0.0))
-                    
-                } else if offset > 0 {
-                    // only show the pull view if the offset is greater the zero
+                    .offset(y: -height)
+                }else{
                     pullView()
                 }
             }
