@@ -1,7 +1,7 @@
 # Gitee iOS客户端
 
-<a href="https://gitee.com/gitee_ios/gitee_ios/stargazers" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=star&user=gitee_ios&project=gitee_ios"/></a>
-<a href="https://gitee.com/gitee_ios/gitee_ios/members" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=fork&user=gitee_ios&project=gitee_ios"/></a>
+<a href="https://gitee.com/open-gitee/gitee_ios/stargazers" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=star&user=open-gitee&project=gitee_ios"/></a>
+<a href="https://gitee.com/open-gitee/gitee_ios/members" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=fork&user=open-gitee&project=gitee_ios"/></a>
 <img src="https://svg.hamm.cn/badge.svg?key=iOS&value=14.2"/>
 <img src="https://svg.hamm.cn/badge.svg?key=xcode&value=12.4"/>
 <a href="https://gitee.com/api/v5/swagger" target="_blank"><img src="https://svg.hamm.cn/badge.svg?key=API&value=GiteeOpenApi"/></a>
