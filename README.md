@@ -7,7 +7,7 @@
 <a href="https://gitee.com/api/v5/swagger" target="_blank"><img src="https://svg.hamm.cn/badge.svg?key=API&value=GiteeOpenApi"/></a>
 
 ### 项目介绍
-Gitee基于SwiftUI和OpenApi的iOS客户端项目，也是我第一次学习SwiftUI的第一个练手项目。之前一直是使用混合开发进行iOS应用的开发，刚开始学习Swift原生开发，大哥们轻喷。QQ群1140258698
+Gitee基于SwiftUI和OpenApi的iOS客户端项目，也是我第一次学习SwiftUI的第一个练手项目。之前一直是使用混合开发进行iOS应用的开发，刚开始学习Swift原生开发，大哥们轻喷。
 
 ### 开发环境
 Api: [Gitee OpenApi](https://gitee.com/api/v5/swagge)
